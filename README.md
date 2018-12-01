@@ -1,2 +1,2 @@
-# peachtree-shop
-A shopping site
+# peachtree-recipes
+A site for saving and sharing recipes!
