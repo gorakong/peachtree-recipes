@@ -11,19 +11,34 @@ db.once('open', function() {
   console.log('mongoose connected successfully');
 });
 
-var itemSchema = mongoose.Schema({
-  quantity: Number,
+var recipeSchema = mongoose.Schema({
+  name: String,
+  picture: String,
   description: String
 });
 
-var Item = mongoose.model('Item', itemSchema);
+const Recipe = mongoose.model('Recipe', recipeSchema);
+
+var userSchema = mongoose.Schema({
+    username: String,
+    savedRecipes: [{
+      type: mongoose.Schema.ObjectId,
+      ref: 'Recipe'
+    }],
+    uploadedRecipes: [{
+      type: mongoose.Schema.ObjectId,
+      ref: 'Recipe'
+    }]
+});
+
+const User = mongoose.model('User', userSchema);
 
 var selectAll = function(callback) {
-  Item.find({}, function(err, items) {
+  Recipe.find({}, function(err, recipes) {
     if(err) {
       callback(err, null);
     } else {
-      callback(null, items);
+      callback(null, recipes);
     }
   });
 };
