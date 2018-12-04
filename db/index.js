@@ -12,8 +12,8 @@ db.once('open', function() {
 });
 
 var recipeSchema = mongoose.Schema({
-  name: String,
-  picture: String,
+  label: String,
+  image: String,
   description: String
 });
 
@@ -43,8 +43,8 @@ var selectAll = function(callback) {
   });
 };
 
-var getSavedRecipes = function(callback) {
-  User.find({}, 'savedRecipes', function(err, recipes) {
+var getSavedRecipes = function(id, callback) {
+  User.findById(id, 'savedRecipes', function(err, recipes) {
     if(err) {
       callback(err, null);
     } else {
@@ -53,11 +53,11 @@ var getSavedRecipes = function(callback) {
   });
 };
 
-var saveRecipe = (data) => {
+var saveRecipe = (userId, data) => {
   const recipe = new Recipe({
-    name: data.label,
-    picture: data.image,
-    description: 'test'
+    label: data.label,
+    image: data.image,
+    description: 'test description'
   });
 
   recipe.save()
@@ -65,6 +65,7 @@ var saveRecipe = (data) => {
     console.log('result saved: ', recipe);
   })
 }
+
 
 module.exports = {
   selectAll,

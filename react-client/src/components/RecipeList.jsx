@@ -3,8 +3,8 @@ import Recipe from './Recipe.jsx';
 
 const RecipeList = ({ recipeEntries, bookmarkRecipe }) => (
   <div>
-    { recipeEntries.map((recipeEntry) => 
-    	<Recipe key={ recipeEntry.recipe.uri } recipe={ recipeEntry.recipe } bookmarkRecipe={ bookmarkRecipe }/>
+    { recipeEntries.map((recipeEntry, i) => 
+    	<Recipe key={ i } recipe={ recipeEntry.recipe || recipeEntry } bookmarkRecipe={ bookmarkRecipe }/>
     )}
   </div>
 );

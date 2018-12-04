@@ -53,11 +53,16 @@ class App extends React.Component {
   }
 
   getSavedRecipes() {
-    axios.get(`/${this.state.userId}/saved`)
-      .then(function (response) {
-        console.log(response);
+    const { userId } = this.state;
+
+    axios.get(`/${userId}/saved`)
+      .then((response) => {
+        console.log('response is ', response.data);
+        this.setState({
+          recipes: response.data
+        })
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
   }

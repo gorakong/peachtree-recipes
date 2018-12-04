@@ -1,6 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var dbMethods = require('../database-mongo');
+var dbMethods = require('../db');
 const cors = require('cors');
 
 var app = express();
@@ -23,12 +23,13 @@ app.get('https://api.edamam.com/search', function(req, res) {
   });
 });
 
-app.post('/user/saved', function(req, res) {
-	dbMethods.saveRecipe(req.body);
+app.post('/:userId/saved', function(req, res, next) {
+	dbMethods.saveRecipe(req.params.userId, req.body);
+	res.end();
 })
 
-app.get('/user/saved', function(req, res) {
-	dbMethods.getSavedRecipes((err, data) => {
+app.get('/:userId/saved', function(req, res) {
+	dbMethods.selectAll((err, data) => {
 		res.send(data);
 	});
 })
