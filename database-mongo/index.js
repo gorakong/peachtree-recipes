@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://localhost/recipeApp');
 
 var db = mongoose.connection;
 
@@ -43,4 +43,31 @@ var selectAll = function(callback) {
   });
 };
 
-module.exports.selectAll = selectAll;
+var getSavedRecipes = function(callback) {
+  User.find({}, 'savedRecipes', function(err, recipes) {
+    if(err) {
+      callback(err, null);
+    } else {
+      callback(null, recipes);
+    }
+  });
+};
+
+var saveRecipe = (data) => {
+  const recipe = new Recipe({
+    name: data.label,
+    picture: data.image,
+    description: 'test'
+  });
+
+  recipe.save()
+  .then((recipe) => {
+    console.log('result saved: ', recipe);
+  })
+}
+
+module.exports = {
+  selectAll,
+  getSavedRecipes,
+  saveRecipe
+};
