@@ -10,6 +10,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      header: 'Featured Recipes',
       userId: '',
       recipes: []
     }
@@ -20,7 +21,7 @@ class App extends React.Component {
   }
 
   getRecipes(query) {
-    axios.get(`https://api.edamam.com/search?q=${query}&app_id=${config.APP_ID}&app_key=${config.API_KEY}&from=0&to=6`, { crossdomain: true })
+    axios.get(`https://api.edamam.com/search?q=${query}&app_id=${config.APP_ID}&app_key=${config.API_KEY}&from=0&to=10`, { crossdomain: true })
       .then((response) => {
         this.setState({
           userId: '5c05f5920e6d34520556afa5',
@@ -59,6 +60,7 @@ class App extends React.Component {
       .then((response) => {
         console.log('response is ', response.data);
         this.setState({
+          header: 'Saved Recipes',
           recipes: response.data
         })
       })
@@ -71,7 +73,7 @@ class App extends React.Component {
     return (
       <div>
         <Nav handleSearchInputChange={this.getRecipes.bind(this)} handleRegistration={this.registerUser.bind(this)} getSavedRecipes={this.getSavedRecipes.bind(this)}/>
-        <h1>Featured Recipes</h1>
+        <h1>{this.state.header}</h1>
         <RecipeList recipeEntries={this.state.recipes} bookmarkRecipe={this.bookmarkRecipe.bind(this)}/>
       </div>
     )

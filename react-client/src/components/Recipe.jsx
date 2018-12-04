@@ -1,9 +1,9 @@
 import React from 'react';
 
 const Recipe = ({ recipe, bookmarkRecipe }) => (
-  <div>
+  <div className="recipe">
   	<img src={ recipe.image } />
-    <h3>{recipe.label}</h3>
+    <h3 className="desc">{recipe.label}</h3>
     <button onClick={ () => bookmarkRecipe(recipe) }>Save</button>
   </div>
 );
