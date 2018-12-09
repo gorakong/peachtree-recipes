@@ -24,14 +24,20 @@ app.get('https://api.edamam.com/search', function(req, res) {
 });
 
 app.post('/:userId/saved', function(req, res, next) {
+	//save recipe to users collection
 	dbMethods.saveRecipe(req.params.userId, req.body);
 	res.end();
-})
+});
 
 app.get('/:userId/saved', function(req, res) {
 	dbMethods.selectAll((err, data) => {
 		res.send(data);
 	});
+});
+
+app.post('/:userId/upload', function(req, res) {
+	// save recipe to recipe db
+	dbMethods.uploadRecipe()
 })
 
 app.listen(3000, function() {

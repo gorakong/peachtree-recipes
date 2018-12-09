@@ -66,6 +66,15 @@ var saveRecipe = (userId, data) => {
   })
 }
 
+var uploadRecipe = (data) => {
+  const recipe = new Recipe({
+    label: data.label,
+    image: data.image,
+    description: 'test description'
+  });
+
+  
+}
 
 module.exports = {
   selectAll,

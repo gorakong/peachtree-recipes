@@ -1,15 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import config from '../../api.config.js';
 import axios from 'axios';
 import RecipeList from './components/RecipeList.jsx';
 import Nav from './components/Nav.jsx';
-import config from '../../api.config.js';
+import Uploads from './components/Uploads.jsx';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoggedIn: true,
       header: 'Featured Recipes',
       userId: '',
       recipes: []
@@ -69,14 +71,27 @@ class App extends React.Component {
       });
   }
 
+  uploadRecipe(recipe) {
+    axios.post(`/${userId}/upload`, recipe)
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+
   render () {
-    return (
-      <div>
-        <Nav handleSearchInputChange={this.getRecipes.bind(this)} handleRegistration={this.registerUser.bind(this)} getSavedRecipes={this.getSavedRecipes.bind(this)}/>
-        <h1>{this.state.header}</h1>
-        <RecipeList recipeEntries={this.state.recipes} bookmarkRecipe={this.bookmarkRecipe.bind(this)}/>
-      </div>
-    )
+    if (this.state.isLoggedIn) {
+      return (
+        <div>
+          <Nav handleSearchInputChange={this.getRecipes.bind(this)} handleRegistration={this.registerUser.bind(this)} getSavedRecipes={this.getSavedRecipes.bind(this)}/>
+          <h1>{this.state.header}</h1>
+          <Uploads isLoggedIn={this.state.isLoggedIn}/>
+          <RecipeList recipeEntries={this.state.recipes} bookmarkRecipe={this.bookmarkRecipe.bind(this)}/>
+        </div>
+      ) 
+    }
   }
 }
 
