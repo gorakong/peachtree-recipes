@@ -91,16 +91,17 @@ class App extends React.Component {
   }
 
   render () {
-    if (this.state.isLoggedIn) {
-      return (
-        <div>
-          <Nav handleSearchInputChange={this.getRecipes.bind(this)} handleRegistration={this.registerUser.bind(this)} getSavedRecipes={this.getSavedRecipes.bind(this)}/>
-          <h1>{this.state.header}</h1>
-          <Uploads isLoggedIn={this.state.isLoggedIn}/>
-          <RecipeList recipeEntries={this.state.recipes} bookmarkRecipe={this.bookmarkRecipe.bind(this)}/>
-        </div>
-      ) 
-    }
+    const nav = 
+    this.state.isLoggedIn ? <Nav handleSearchInputChange={this.getRecipes.bind(this)} handleRegistration={this.registerUser.bind(this)} getSavedRecipes={this.getSavedRecipes.bind(this)}/>
+    : <div>Guest Nav</div>;
+    return (
+      <div>
+        { nav }
+        <h1>{this.state.header}</h1>
+        <Uploads isLoggedIn={this.state.isLoggedIn}/>
+        <RecipeList recipeEntries={this.state.recipes} bookmarkRecipe={this.bookmarkRecipe.bind(this)}/>
+      </div>
+    )
   }
 }
 
