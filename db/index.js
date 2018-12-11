@@ -33,8 +33,8 @@ var userSchema = mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-var selectAll = function(callback) {
-  Recipe.find({}, function(err, recipes) {
+var selectAll = (callback) => {
+  Recipe.find({}, (err, recipes) => {
     if(err) {
       callback(err, null);
     } else {
@@ -43,8 +43,8 @@ var selectAll = function(callback) {
   });
 };
 
-var getSavedRecipes = function(id, callback) {
-  User.findById(id, 'savedRecipes', function(err, recipes) {
+var getSavedRecipes = (id, callback) => {
+  User.findById(id, 'savedRecipes', (err, recipes) => {
     if(err) {
       callback(err, null);
     } else {

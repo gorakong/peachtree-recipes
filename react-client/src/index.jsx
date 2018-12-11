@@ -22,35 +22,44 @@ class App extends React.Component {
     this.getRecipes('cookie');
   }
 
+  getRecipesFromAPI(query) {
+    return axios.get(`https://api.edamam.com/search?q=${query}&app_id=${config.APP_ID}&app_key=${config.API_KEY}&from=0&to=10`, { crossdomain: true });
+  }
+
+  getRecipesFromDB(query) {
+    return axios.get('/search');
+  }
+
   getRecipes(query) {
-    axios.get(`https://api.edamam.com/search?q=${query}&app_id=${config.APP_ID}&app_key=${config.API_KEY}&from=0&to=10`, { crossdomain: true })
-      .then((response) => {
+    axios.all([this.getRecipesFromAPI(query), this.getRecipesFromDB(query)])
+      .then(axios.spread((apiResp, dbResp) => {
+        const recipes  = apiResp.data.hits.concat(dbResp.data);
         this.setState({
           userId: '5c05f5920e6d34520556afa5',
-          recipes: response.data.hits
+          recipes
         });
+      }))
+      .catch((error) => {
+        console.log(error);
+      })
+  }
+
+  bookmarkRecipe(recipe) {
+    axios.post(`/${this.state.userId}/saved`, recipe)
+      .then((response) => {
+        console.log(response);
       })
       .catch((error) => {
         console.log(error);
       });
   }
 
-  bookmarkRecipe(recipe) {
-    axios.post(`/${this.state.userId}/saved`, recipe)
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
-
   registerUser(user) {
     axios.post('/create', user)
-      .then(function (response) {
+      .then((response) => {
         console.log(response);
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
   }
