@@ -27,13 +27,14 @@ class App extends React.Component {
   }
 
   getRecipesFromDB(query) {
-    return axios.get('/search');
+    return axios.get(`/search/${query}`);
   }
 
   getRecipes(query) {
     axios.all([this.getRecipesFromAPI(query), this.getRecipesFromDB(query)])
       .then(axios.spread((apiResp, dbResp) => {
         const recipes  = apiResp.data.hits.concat(dbResp.data);
+        console.log(recipes);
         this.setState({
           userId: '5c05f5920e6d34520556afa5',
           recipes
