@@ -1,5 +1,8 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/recipeApp');
+
+mongoose.Promise = global.Promise;
+
+mongoose.connect('mongodb://localhost/recipeApp', { useMongoClient: true });
 
 var db = mongoose.connection;
 
@@ -35,78 +38,79 @@ const userSchema = mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 const selectAll = (callback) => {
-  Recipe.find({}, (err, recipes) => {
-    if(err) {
+  Recipe.find({}, (err, results) => {
+    if (err) {
       callback(err, null);
     } else {
-      callback(null, recipes);
+      callback(null, results);
     }
-  });
-};
+  })
+}; 
+
+// const search = (query, callback) => {
+//   Recipe.find({$text: {$search: query}})
+//      .skip(20)
+//      .limit(10)
+//      .exec((err, results) => {
+//       if (err) {
+//         callback(err, null);
+//       } else {
+//         callback(null, results);
+//       }
+//      });
+// };
 
 const search = (query, callback) => {
-  Recipe.find({$text: {$search: query}})
-     .skip(20)
-     .limit(10)
-     .exec((err, results) => {
-      if (err) {
-        callback(err, null);
-      } else {
-        callback(null, results);
-      }
-     });
-};
-
-const getSavedRecipes = (id, callback) => {
-  User.findById(id, 'savedRecipes', (err, recipes) => {
-    if(err) {
+  Recipe.find({ label: query, description: query }, (err, results) => {
+    if (err) {
       callback(err, null);
     } else {
-      callback(null, recipes);
+      callback(null, results);
     }
-  });
+  })
 };
 
-const saveRecipe = (userId, data) => {
-  // save recipe into user's saved recipes collection
-  const recipe = new Recipe({
-    label: data.label,
-    image: data.image,
-    description: 'test description'
-  });
-
-  recipe.save()
-  .then((recipe) => {
-    console.log('result saved: ', recipe);
-  })
-}
-
-const saveRecipeToUsersCollection = (userId, data) => {
+const getSavedRecipes = (userId, callback) => {
   User
-  .findOne({ _id: userId })
+  .findById(userId)
   .populate('savedRecipes')
-  .exec((err, data) => {
+  .exec((err, user) => {
     if (err) {
-      console.log(err);
+      callback(err, null);
     } else {
-      uploadRecipe(data);
-      console.log('population successful');
+      callback(null, user.savedRecipes);
     }
   })
+};
+
+const saveRecipe = (recipe) => {
+  // save recipe into global Recipe table
+  recipe.save()
+  .then((recipe) => {
+    console.log('Recipe saved: ', recipe);
+  })
 }
 
-const uploadRecipe = (data) => {
-  // upload recipe into Recipe db
+const saveRecipeToUsersCollection = (userId, data, dest) => {
+  // dest can be either savedRecipes or uploadedRecipes
   const recipe = new Recipe({
+    _id: data._id,
     label: data.label,
     image: data.image,
     description: 'test description'
   });
 
-  recipe.save()
-  .then((recipe) => {
-    console.log('result saved: ', recipe);
-  })
+  let query = {};
+  query[dest] = recipe;
+
+  User
+  .findByIdAndUpdate(userId, { $push: query }, (err, recipe) => {
+    if (err) {
+      console.log('Error saving recipe to user collection');
+    } else {
+      saveRecipe(recipe);
+    }
+  });
 }
 
 const getRecipeDetails = (id, callback) => {
@@ -120,9 +124,10 @@ const getRecipeDetails = (id, callback) => {
 }
 
 module.exports = {
-  search,
   selectAll,
+  search,
   getSavedRecipes,
   saveRecipe,
+  saveRecipeToUsersCollection,
   getRecipeDetails
 };

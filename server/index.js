@@ -21,23 +21,29 @@ app.get('/search/:query', (req, res) => {
 
 app.post('/:userId/saved', (req, res, next) => {
 	//save recipe to users collection
-	dbMethods.saveRecipe(req.params.userId, req.body);
+	dbMethods.saveRecipeToUsersCollection(req.params.userId, req.body, 'savedRecipes');
 	res.end();
 });
 
 app.get('/:userId/saved', (req, res) => {
-	dbMethods.selectAll((err, data) => {
-		res.send(data);
+	dbMethods.getSavedRecipes(req.params.userId, (err, data) => {
+		if (err) {
+			console.log('Error retrieving saved recipes');
+		} else {
+			res.send(data);
+		}
 	});
 });
 
 app.post('/:userId/upload', (req, res) => {
 	// save recipe to recipe db
-	dbMethods.uploadRecipe();
+	dbMethods.saveRecipeToUsersCollection(req.params.userId, req.body, 'uploadedRecipes');
 })
 
 app.get('/:recipeId', (req, res) => {
-	dbMethods.getRecipeDetails();
+	dbMethods.getRecipeDetails(req.params.recipeId, (err, data) => {
+		res.send(data);
+	});
 })
 
 app.listen(3000, function() {

@@ -33,8 +33,8 @@ class App extends React.Component {
   getRecipes(query) {
     axios.all([this.getRecipesFromAPI(query), this.getRecipesFromDB(query)])
       .then(axios.spread((apiResp, dbResp) => {
+        console.log("search results from db: ", dbResp.data);
         const recipes  = apiResp.data.hits.concat(dbResp.data);
-        console.log(recipes);
         this.setState({
           userId: '5c05f5920e6d34520556afa5',
           recipes
@@ -47,16 +47,6 @@ class App extends React.Component {
 
   bookmarkRecipe(recipe) {
     axios.post(`/${this.state.userId}/saved`, recipe)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  registerUser(user) {
-    axios.post('/create', user)
       .then((response) => {
         console.log(response);
       })
@@ -89,6 +79,16 @@ class App extends React.Component {
     .catch((error) => {
       console.log(error);
     })
+  }
+
+  registerUser(user) {
+    axios.post('/create', user)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   render () {

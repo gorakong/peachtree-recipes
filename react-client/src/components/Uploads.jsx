@@ -1,11 +1,12 @@
 import React from 'react';
+import { Button } from 'semantic-ui-react';
 
 const Uploads = ({ isLoggedIn }) => {
 
 	if (isLoggedIn) {
 		return (
 			<div>
-				Uploads component
+				<Button content="Submit a Recipe"/>
 			</div>
 		)
 	}
