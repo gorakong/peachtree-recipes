@@ -1,2 +1,2 @@
 # peachtree-recipes
-A site for saving and sharing recipes!
+An app for saving and sharing recipes!
