@@ -84,33 +84,33 @@ const getSavedRecipes = (userId, callback) => {
   })
 };
 
-const saveRecipe = (recipe) => {
+const saveRecipe = (data, callback) => {
   // save recipe into global Recipe table
-  recipe.save()
-  .then((recipe) => {
-    console.log('Recipe saved');
-  })
-}
-
-const saveRecipeToUsersCollection = (userId, data, dest) => {
-  // dest can be either savedRecipes or uploadedRecipes
-  const recipe = new Recipe({
+  Recipe.create({
     _id: data._id,
     label: data.label,
     image: data.image,
     description: 'test description'
+  }, (err, recipe) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, recipe);
+    }
   });
+}
 
+const saveRecipeToUsersCollection = (userId, recipe, dest) => {
+  // dest can be either savedRecipes or uploadedRecipes
   let query = {};
   query[dest] = recipe;
 
   User
-  .findByIdAndUpdate(userId, { $push: query }, (err, recipe) => {
+  .findByIdAndUpdate(userId, { $push: query }, (err) => {
     if (err) {
-      console.log('Error saving recipe to user collection');
+      console.log(`Error saving recipe to user's collection`);
     } else {
-      console.log('saved to user collection');
-      saveRecipe(recipe);
+      console.log('Saved');
     }
   });
 }

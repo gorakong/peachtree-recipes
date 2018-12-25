@@ -20,8 +20,14 @@ app.get('/search/:query', (req, res) => {
 });
 
 app.post('/:userId/saved', (req, res, next) => {
-	//save recipe to users collection
-	dbMethods.saveRecipeToUsersCollection(req.params.userId, req.body, 'savedRecipes');
+	//save recipe to users saved collection & recipe db
+	dbMethods.saveRecipe(req.body, (err, result) => {
+		if (err) {
+			console.log('Error saving recipe');
+		} else {
+			dbMethods.saveRecipeToUsersCollection(req.params.userId, result, 'savedRecipes');
+		}
+	});
 	res.end();
 });
 
@@ -36,7 +42,7 @@ app.get('/:userId/saved', (req, res) => {
 });
 
 app.post('/:userId/upload', (req, res) => {
-	// save recipe to recipe db
+	// save recipe to user's uploads collection & recipe db
 	dbMethods.saveRecipeToUsersCollection(req.params.userId, req.body, 'uploadedRecipes');
 })
 
