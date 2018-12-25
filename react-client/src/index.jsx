@@ -35,6 +35,7 @@ class App extends React.Component {
       .then(axios.spread((apiResp, dbResp) => {
         console.log("search results from db: ", dbResp.data);
         const recipes  = apiResp.data.hits.concat(dbResp.data);
+        console.log('all recipes: ', recipes);
         this.setState({
           userId: '5c05f5920e6d34520556afa5',
           recipes
@@ -67,7 +68,7 @@ class App extends React.Component {
         })
       })
       .catch((error) => {
-        console.log(error);
+        console.log(`error retrieving user's saved recipes`);
       });
   }
 

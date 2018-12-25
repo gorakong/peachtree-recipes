@@ -78,6 +78,7 @@ const getSavedRecipes = (userId, callback) => {
     if (err) {
       callback(err, null);
     } else {
+      //console.log(user.toJSON());
       callback(null, user.savedRecipes);
     }
   })
@@ -87,7 +88,7 @@ const saveRecipe = (recipe) => {
   // save recipe into global Recipe table
   recipe.save()
   .then((recipe) => {
-    console.log('Recipe saved: ', recipe);
+    console.log('Recipe saved');
   })
 }
 
@@ -108,6 +109,7 @@ const saveRecipeToUsersCollection = (userId, data, dest) => {
     if (err) {
       console.log('Error saving recipe to user collection');
     } else {
+      console.log('saved to user collection');
       saveRecipe(recipe);
     }
   });
