@@ -6,7 +6,7 @@ const Uploads = ({ isLoggedIn }) => {
 	if (isLoggedIn) {
 		return (
 			<div>
-				<Button content="Submit a Recipe"/>
+				You have been directed to the uploads page
 			</div>
 		)
 	}

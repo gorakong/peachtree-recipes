@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import config from '../../api.config.js';
@@ -6,12 +6,14 @@ import axios from 'axios';
 import RecipeList from './components/RecipeList.jsx';
 import Nav from './components/Nav.jsx';
 import Uploads from './components/Uploads.jsx';
+import { Button } from 'semantic-ui-react';
 
-class App extends React.Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoggedIn: true,
+      page: 'landing',
       header: 'Featured Recipes',
       userId: '',
       recipes: []
@@ -33,9 +35,7 @@ class App extends React.Component {
   getRecipes(query) {
     axios.all([this.getRecipesFromAPI(query), this.getRecipesFromDB(query)])
       .then(axios.spread((apiResp, dbResp) => {
-        console.log("search results from db: ", dbResp.data);
         const recipes  = apiResp.data.hits.concat(dbResp.data);
-        console.log('all recipes: ', recipes);
         this.setState({
           userId: '5c05f5920e6d34520556afa5',
           recipes
@@ -92,16 +92,28 @@ class App extends React.Component {
       });
   }
 
+  handleUploadButtonClick(targetPage) {
+    const { page } = targetPage;
+
+    this.setState({ page });
+  }
+
   render () {
     const nav = 
     this.state.isLoggedIn ? <Nav handleSearchInputChange={this.getRecipes.bind(this)} handleRegistration={this.registerUser.bind(this)} getSavedRecipes={this.getSavedRecipes.bind(this)}/>
     : <div>Guest Nav</div>;
+
+    // possibly replace with a switch statement when more pages added
+    const pageContents = 
+    this.state.page === 'landing' ? 
+        <RecipeList recipeEntries={this.state.recipes} bookmarkRecipe={this.bookmarkRecipe.bind(this)}/> :
+        <Uploads isLoggedIn={this.state.isLoggedIn}/>
     return (
       <div>
         { nav }
         <h1>{this.state.header}</h1>
-        <Uploads isLoggedIn={this.state.isLoggedIn}/>
-        <RecipeList recipeEntries={this.state.recipes} bookmarkRecipe={this.bookmarkRecipe.bind(this)}/>
+        <Button content="Submit a Recipe" onClick={() => this.handleUploadButtonClick('upload')}/>
+        { pageContents }
       </div>
     )
   }
