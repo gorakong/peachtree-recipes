@@ -25,7 +25,7 @@ class App extends Component {
   }
 
   getRecipesFromAPI(query) {
-    return axios.get(`https://api.edamam.com/search?q=${query}&app_id=${config.APP_ID}&app_key=${config.API_KEY}&from=0&to=10`, { crossdomain: true });
+    return axios.get(`https://api.edamam.com/search?q=${query}&app_id=${config.APP_ID}&app_key=${config.API_KEY}&from=0&to=20`, { crossdomain: true });
   }
 
   getRecipesFromDB(query) {
