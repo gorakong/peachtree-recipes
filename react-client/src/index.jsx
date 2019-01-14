@@ -9,8 +9,10 @@ import Uploads from './components/Uploads.jsx';
 import { Button } from 'semantic-ui-react';
 
 class App extends Component {
+
   constructor(props) {
     super(props);
+
     this.state = {
       isLoggedIn: true,
       page: 'landing',
@@ -36,6 +38,7 @@ class App extends Component {
     axios.all([this.getRecipesFromAPI(query), this.getRecipesFromDB(query)])
       .then(axios.spread((apiResp, dbResp) => {
         const recipes  = apiResp.data.hits.concat(dbResp.data);
+        console.log(recipes);
         this.setState({
           userId: '5c05f5920e6d34520556afa5',
           recipes
@@ -46,10 +49,10 @@ class App extends Component {
       })
   }
 
-  bookmarkRecipe(recipe) {
+  bookmarkRecipe(recipe, cb) {
     axios.post(`/${this.state.userId}/saved`, recipe)
       .then((response) => {
-        console.log(response);
+        cb(response);
       })
       .catch((error) => {
         console.log(error);

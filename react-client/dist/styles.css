@@ -1,20 +1,10 @@
-div.recipe {
-    margin: 5px;
-    border: 1px solid #ccc;
-    float: left;
-    width: 180px;
-}
+@import url('https://fonts.googleapis.com/css?family=Quicksand:400,700');
 
-div.recipe:hover {
-    border: 1px solid #777;
-}
-
-div.recipe img {
-    width: 100%;
-    height: auto;
-}
-
-div.desc {
+#app {
+    font-family: 'Quicksand', sans-serif;
     padding: 15px;
-    text-align: center;
+}
+
+.ui.card>.content>.header, .ui.cards>.card>.content>.header {
+    font-family: 'Quicksand', sans-serif;
 }

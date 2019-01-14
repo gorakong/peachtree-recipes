@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Input, Button } from 'semantic-ui-react';
 
-class Nav extends React.Component {
+class Nav extends Component {
   constructor(props) {
     super(props);
 
@@ -19,16 +20,14 @@ class Nav extends React.Component {
   render() {
     return (
       <div className="search-bar form-inline">
-        <input
-          className="form-control"
-          type="text"
+        <Input
+          icon='search'
+          placeholder='Search...' 
           value={this.state.value}
           onChange={(e) => this.handleInputChange(e.target.value)}
         />
-        <button className="btn hidden-sm-down">
-          <span className="glyphicon glyphicon-search" onClick={() => this.props.handleSearchInputChange(this.state.value)}>Search</span>
-        </button>
-        <button className="btn saved" onClick={() => this.props.getSavedRecipes()}>Saved Recipes</button>
+        <Button content='Search' onClick={() => this.props.handleSearchInputChange(this.state.value)} />
+        <Button content='Saved Recipes' onClick={() => this.props.getSavedRecipes()} />
       </div>
     );
   }
