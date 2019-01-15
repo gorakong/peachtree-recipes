@@ -18,6 +18,8 @@ class Nav extends Component {
   }
 
   render() {
+    const { handleSearchInputChange, getSavedRecipes, handleUploads } = this.props;
+
     return (
       <div className="search-bar form-inline">
         <Input
@@ -26,8 +28,9 @@ class Nav extends Component {
           value={this.state.value}
           onChange={(e) => this.handleInputChange(e.target.value)}
         />
-        <Button content='Search' onClick={() => this.props.handleSearchInputChange(this.state.value)} />
-        <Button content='Saved Recipes' onClick={() => this.props.getSavedRecipes()} />
+        <Button id='searchButton' color='pink' content='Search' onClick={() => handleSearchInputChange(this.state.value)} />
+        <Button content='Saved Recipes' color='pink' onClick={() => getSavedRecipes()} />
+        <Button color='pink' content="Submit a Recipe" onClick={() => handleUploads('upload')}/>
       </div>
     );
   }

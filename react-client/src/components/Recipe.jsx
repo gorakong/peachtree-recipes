@@ -29,13 +29,14 @@ class Recipe extends Component {
         link
         name={ this.state.heart }
         color="pink"
-        onClick={ () => bookmarkRecipe(this.toggleLike(recipe)) }
+        onClick={ () => bookmarkRecipe(recipe, this.toggleLike(recipe)) }
       />
     )
 
     return (
       <Card className="recipe"
         raised
+        href={ recipe.url }
         image={ recipe.image }
         header={ recipe.label }
         meta={ time + Math.round(recipe.calories) + ` calories` }
