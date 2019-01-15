@@ -36,7 +36,6 @@ class Recipe extends Component {
     return (
       <Card className="recipe"
         raised
-        href={ recipe.url }
         image={ recipe.image }
         header={ recipe.label }
         meta={ time + Math.round(recipe.calories) + ` calories` }
