@@ -1,9 +1,15 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var dbMethods = require('../db');
+const express = require('express');
+const bodyParser = require('body-parser');
+const dbMethods = require('../db');
 const cors = require('cors');
+const multer = require('multer');
+const storage = require('multer-gridfs-storage')({
+	url: 'mongodb://localhost/recipeApp'
+});
 
-var app = express();
+const upload = multer({ storage: storage });
+
+const app = express();
 
 app.use(cors());
 
@@ -19,31 +25,48 @@ app.get('/search/:query', (req, res) => {
 	});
 });
 
+app.get('/:userId/saved', (req, res) => {
+	dbMethods.getSavedRecipes(req.params.userId, (err, data) => {
+		if (err) console.log('Error retrieving saved recipes');
+		res.send(data);
+	});
+});
+
 app.post('/:userId/saved', (req, res, next) => {
 	//save recipe to users saved collection & recipe db
 	dbMethods.saveRecipe(req.body, (err, result) => {
-		if (err) {
-			console.log('Error saving recipe');
-		} else {
-			dbMethods.saveRecipeToUsersCollection(req.params.userId, result, 'savedRecipes');
-		}
+		if (err) console.log('Error saving recipe');
+		dbMethods.saveRecipeToUsersCollection(req.params.userId, result, 'savedRecipes');
 	});
 	res.end();
 });
 
-app.get('/:userId/saved', (req, res) => {
-	dbMethods.getSavedRecipes(req.params.userId, (err, data) => {
-		if (err) {
-			console.log('Error retrieving saved recipes');
-		} else {
-			res.send(data);
-		}
+app.get('/:userId/uploads', (req, res) => {
+	dbMethods.getUploadedRecipes(req.params.userId, (err, data) => {
+		if (err) console.log('Error retrieving uploads');
+		res.send(data);
 	});
-});
+})
 
-app.post('/:userId/upload', (req, res) => {
+app.post('/:userId/uploads', (req, res) => {
 	// save recipe to user's uploads collection & recipe db
-	dbMethods.saveRecipeToUsersCollection(req.params.userId, req.body, 'uploadedRecipes');
+
+	Recipe.create({
+		_id: data._id,
+		label: data.label,
+		image: data.image,
+		description: 'test description'
+	});
+
+	let file = req.file;
+	
+	console.log('In server.file is: ', file);
+
+	dbMethods.saveRecipe(recipe, (err, result) => {
+		if (err) console.log('Error uploading recipe to server');
+		dbMethods.saveRecipeToUsersCollection(req.params.userId, file, 'uploadedRecipes');
+	});
+	res.end();
 })
 
 app.get('/:recipeId', (req, res) => {
@@ -52,7 +75,7 @@ app.get('/:recipeId', (req, res) => {
 	});
 })
 
-app.listen(3000, function() {
-  console.log('listening on port 3000!');
+app.listen(3000, () => {
+	console.log('listening on port 3000!');
 });
 

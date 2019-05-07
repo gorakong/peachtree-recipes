@@ -110,7 +110,7 @@ class Index extends Component {
     const pageContents = 
     this.state.page === 'landing' ? 
         <RecipeList recipeEntries={this.state.recipes} bookmarkRecipe={this.bookmarkRecipe.bind(this)}/> :
-        <Uploads isLoggedIn={this.state.isLoggedIn} />
+        <Uploads isLoggedIn={this.state.isLoggedIn} userId={this.state.userId}/>
 
     return (
       <div>

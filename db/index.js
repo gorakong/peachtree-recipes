@@ -84,6 +84,19 @@ const getSavedRecipes = (userId, callback) => {
   })
 };
 
+const getUploadedRecipes = (userId, callback) => {
+  User
+  .findById(userId)
+  .populate('uploadedRecipes')
+  .exec((err, user) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, user.uploadedRecipes);
+    }
+  })
+}
+
 const saveRecipe = (data, callback) => {
   // save recipe into global Recipe table
   Recipe.create({
@@ -129,6 +142,7 @@ module.exports = {
   selectAll,
   search,
   getSavedRecipes,
+  getUploadedRecipes,
   saveRecipe,
   saveRecipeToUsersCollection,
   getRecipeDetails
